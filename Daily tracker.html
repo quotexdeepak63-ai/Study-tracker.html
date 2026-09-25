@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Study & Test Tracker</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    body {
+      background-color: #f8fafc;
+      color: #1e293b;
+      padding: 16px 10px 40px;
+      display: flex;
+      justify-content: center;
+    }
+    .container {
+      width: 100%;
+      max-width: 650px;
+      background: #ffffff;
+      padding: 20px 16px;
+      border-radius: 12px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 16px;
+      font-size: 20px;
+      color: #0f172a;
+    }
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #cbd5e1;
+      background: #f1f5f9;
+      color: #475569;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .tab-btn.active {
+      background: #2563eb;
+      color: #ffffff;
+      border-color: #2563eb;
+    }
+    .form-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      padding: 14px;
+      border-radius: 8px;
+      margin-bottom: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .input-row {
+      display: flex;
+      gap: 8px;
+    }
+    input, select, button {
+      padding: 9px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 14px;
+      outline: none;
+      width: 100%;
+    }
+    button.btn-primary {
+      background: #2563eb;
+      color: white;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button.btn-primary:hover {
+      background: #1d4ed8;
+    }
+    button.btn-cancel {
+      background: #94a3b8;
+      color: white;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .filter-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      background: #f1f5f9;
+      padding: 10px 12px;
+      border-radius: 8px;
+      gap: 8px;
+    }
+    .filter-bar label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #334155;
+      white-space: nowrap;
+    }
+    .btn-clear {
+      background: #e2e8f0;
+      border: 1px solid #cbd5e1;
+      padding: 8px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1.5px solid #334155;
+      margin-bottom: 24px;
+    }
+    th, td {
+      border: 1px solid #64748b;
+      padding: 8px 6px;
+      text-align: center;
+      font-size: 14px;
+    }
+    th {
+      background-color: #f1f5f9;
+      font-weight: 700;
+      color: #0f172a;
+    }
+    .growth-up {
+      color: #16a34a;
+      font-weight: 700;
+    }
+    .growth-down {
+      color: #dc2626;
+      font-weight: 700;
+    }
+    .growth-same {
+      color: #64748b;
+      font-weight: 600;
+    }
+    .status-pass {
+      color: #16a34a;
+      font-weight: bold;
+      font-size: 16px;
+    }
+    .status-fail {
+      color: #dc2626;
+      font-weight: bold;
+      font-size: 16px;
+    }
+    .empty-msg {
+      padding: 16px;
+      color: #94a3b8;
+    }
+    .skipped-row {
+      background-color: #fef2f2;
+      color: #b91c1c;
+    }
+    .manager-section {
+      border-top: 2px dashed #e2e8f0;
+      padding-top: 16px;
+      margin-top: 10px;
+    }
+    .manager-title {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .manage-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+    .manage-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f8fafc;
+      padding: 8px 10px;
+      border-radius: 6px;
+      border: 1px solid #e2e8f0;
+      font-size: 13px;
+    }
+    .item-actions {
+      display: flex;
+      gap: 6px;
+    }
+    .btn-action-edit {
+      background: #0284c7;
+      color: white;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+    .btn-action-del {
+      background: #ef4444;
+      color: white;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Study & Test Tracker</h2>
+
+  <div class="tabs">
+    <button class="tab-btn active" id="tabStudy" onclick="switchTab('study')">Study Hours</button>
+    <button class="tab-btn" id="tabTest" onclick="switchTab('test')">Test Marks</button>
+  </div>
+
+  <!-- Study Form -->
+  <form id="studyForm" class="form-box">
+    <div class="input-row">
+      <input type="date" id="studyDate" required>
+      <input type="number" id="studyHours" placeholder="Hours" step="0.5" min="0.1" required>
+    </div>
+    
+    <!-- Subject Selection Dropdown & Textbox -->
+    <div class="input-row">
+      <select id="studySubjectSelect" onchange="handleSubjectSelectChange('study')">
+        <option value="">-- Choose Existing Subject --</option>
+      </select>
+    </div>
+    <input type="text" id="studySubject" placeholder="Or type new Subject Name" required>
+
+    <div class="input-row">
+      <button type="submit" class="btn-primary" id="studySubmitBtn">+ Add Study Entry</button>
+      <button type="button" class="btn-cancel" id="studyCancelBtn" style="display:none;" onclick="cancelStudyEdit()">Cancel</button>
+    </div>
+  </form>
+
+  <!-- Test Form -->
+  <form id="testForm" class="form-box" style="display: none;">
+    <div class="input-row">
+      <input type="date" id="testDate" required>
+      <select id="testStatus">
+        <option value="Attended">Attended (✔)</option>
+        <option value="Not Attended">Not Attended (✖)</option>
+      </select>
+    </div>
+
+    <!-- Test Subject Selection Dropdown & Textbox -->
+    <div class="input-row">
+      <select id="testSubjectSelect" onchange="handleSubjectSelectChange('test')">
+        <option value="">-- Choose Existing Test / Subject --</option>
+      </select>
+    </div>
+    <div class="input-row">
+      <input type="text" id="testSubject" placeholder="Or type new Test / Subject" required>
+      <input type="number" id="testMarks" placeholder="Marks" step="0.5" min="0">
+    </div>
+
+    <div class="input-row">
+      <button type="submit" class="btn-primary" id="testSubmitBtn">+ Add Test Entry</button>
+      <button type="button" class="btn-cancel" id="testCancelBtn" style="display:none;" onclick="cancelTestEdit()">Cancel</button>
+    </div>
+  </form>
+
+  <!-- Filter -->
+  <div class="filter-bar">
+    <div style="display:flex; align-items:center; gap:8px;">
+      <label for="filterDate">Select Date:</label>
+      <input type="date" id="filterDate" onchange="renderAll()">
+    </div>
+    <button class="btn-clear" onclick="clearFilter()">Show All Days</button>
+  </div>
+
+  <!-- Table -->
+  <table>
+    <thead id="tableHead"></thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+
+  <!-- External Edit & Delete Section -->
+  <div class="manager-section">
+    <div class="manager-title">Manage Records (Edit / Delete)</div>
+    <div class="manage-list" id="manageList"></div>
+  </div>
+</div>
+
+<script>
+  let currentTab = 'study';
+  let editStudyId = null;
+  let editTestId = null;
+
+  let studyData = JSON.parse(localStorage.getItem('study_data_v2')) || [];
+  let testData = JSON.parse(localStorage.getItem('test_data_v2')) || [];
+
+  function formatDate(d) {
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  const todayStr = formatDate(new Date());
+  document.getElementById('studyDate').value = todayStr;
+  document.getElementById('testDate').value = todayStr;
+
+  function updateDropdowns() {
+    // Populate Study Subjects Dropdown
+    const studySelect = document.getElementById('studySubjectSelect');
+    const existingStudySubjects = [...new Set(studyData.map(d => d.subject.trim()))].sort();
+    
+    studySelect.innerHTML = '<option value="">-- Choose Existing Subject --</option>';
+    existingStudySubjects.forEach(sub => {
+      studySelect.innerHTML += `<option value="${sub}">${sub}</option>`;
+    });
+
+    // Populate Test Subjects Dropdown
+    const testSelect = document.getElementById('testSubjectSelect');
+    const existingTestSubjects = [...new Set(testData.map(d => d.subject.trim()))].sort();
+    
+    testSelect.innerHTML = '<option value="">-- Choose Existing Test / Subject --</option>';
+    existingTestSubjects.forEach(sub => {
+      testSelect.innerHTML += `<option value="${sub}">${sub}</option>`;
+    });
+  }
+
+  function handleSubjectSelectChange(tab) {
+    if (tab === 'study') {
+      const selected = document.getElementById('studySubjectSelect').value;
+      if (selected) {
+        document.getElementById('studySubject').value = selected;
+      }
+    } else {
+      const selected = document.getElementById('testSubjectSelect').value;
+      if (selected) {
+        document.getElementById('testSubject').value = selected;
+      }
+    }
+  }
+
+  function switchTab(tab) {
+    currentTab = tab;
+    document.getElementById('tabStudy').classList.toggle('active', tab === 'study');
+    document.getElementById('tabTest').classList.toggle('active', tab === 'test');
+    document.getElementById('studyForm').style.display = tab === 'study' ? 'flex' : 'none';
+    document.getElementById('testForm').style.display = tab === 'test' ? 'flex' : 'none';
+    renderAll();
+  }
+
+  function clearFilter() {
+    document.getElementById('filterDate').value = '';
+    renderAll();
+  }
+
+  function renderAll() {
+    updateDropdowns();
+    if (currentTab === 'study') {
+      renderStudyTable();
+      renderStudyManager();
+    } else {
+      renderTestTable();
+      renderTestManager();
+    }
+  }
+
+  function getContinuousDates(dataArray) {
+    const rawDates = dataArray.map(d => d.date).sort();
+    let startDate = new Date(rawDates[0]);
+    let endDate = new Date(todayStr);
+    if (startDate > endDate) endDate = new Date(startDate);
+
+    let dates = [];
+    let cur = new Date(startDate);
+    while (cur <= endDate) {
+      dates.push(formatDate(cur));
+      cur.setDate(cur.getDate() + 1);
+    }
+    return dates;
+  }
+
+  // --- STUDY TAB LOGIC ---
+  function renderStudyTable() {
+    const head = document.getElementById('tableHead');
+    const body = document.getElementById('tableBody');
+    const selectedDate = document.getElementById('filterDate').value;
+
+    head.innerHTML = `
+      <tr>
+        <th style="width: 25%;">Date</th>
+        <th style="width: 35%;">Subject</th>
+        <th style="width: 20%;">hr</th>
+        <th style="width: 20%;">Growth</th>
+      </tr>
+    `;
+    body.innerHTML = '';
+
+    if (selectedDate) {
+      const dayEntries = studyData.filter(d => d.date === selectedDate);
+      if (dayEntries.length === 0) {
+        body.innerHTML = `<tr class="skipped-row">
+          <td>${selectedDate}</td>
+          <td><strong>Skipped (No Study)</strong></td>
+          <td><strong>0 hr</strong></td>
+          <td><span class="growth-down">&#8595; Skipped</span></td>
+        </tr>`;
+        return;
+      }
+      
+      const allRecordedDates = [...new Set(studyData.map(d => d.date))].sort();
+      const prevDate = allRecordedDates.filter(d => d < selectedDate).pop();
+
+      dayEntries.forEach(item => {
+        let growthBadge = '<span class="growth-same">-</span>';
+        if (prevDate) {
+          const prevItem = studyData.find(d => d.date === prevDate && d.subject.toLowerCase() === item.subject.toLowerCase());
+          if (prevItem) {
+            const diff = (item.hours - prevItem.hours).toFixed(1);
+            if (diff > 0) growthBadge = `<span class="growth-up">&#8593; +${diff}h</span>`;
+            else if (diff < 0) growthBadge = `<span class="growth-down">&#8595; ${diff}h</span>`;
+            else growthBadge = `<span class="growth-same">= 0h</span>`;
+          }
+        }
+        body.innerHTML += `
+          <tr>
+            <td>${item.date}</td>
+            <td>${item.subject}</td>
+            <td>${item.hours} hr</td>
+            <td>${growthBadge}</td>
+          </tr>
+        `;
+      });
+    } else {
+      if (studyData.length === 0) {
+        body.innerHTML = `<tr><td colspan="4" class="empty-msg">No entries added yet.</td></tr>`;
+        return;
+      }
+
+      const continuousDates = getContinuousDates(studyData);
+      let prevTotal = null;
+
+      continuousDates.forEach(dateStr => {
+        const items = studyData.filter(d => d.date === dateStr);
+        const total = items.reduce((acc, curr) => acc + Number(curr.hours), 0);
+        const isSkipped = (items.length === 0);
+
+        let growthBadge = '<span class="growth-same">-</span>';
+        if (prevTotal !== null) {
+          const diff = (total - prevTotal).toFixed(1);
+          if (diff > 0) growthBadge = `<span class="growth-up">&#8593; +${diff}h</span>`;
+          else if (diff < 0) growthBadge = `<span class="growth-down">&#8595; ${diff}h</span>`;
+          else growthBadge = `<span class="growth-same">= 0h</span>`;
+        }
+        prevTotal = total;
+
+        if (isSkipped) {
+          body.innerHTML += `
+            <tr class="skipped-row">
+              <td>${dateStr}</td>
+              <td><strong>Skipped (No Study)</strong></td>
+              <td><strong>0 hr</strong></td>
+              <td>${growthBadge}</td>
+            </tr>
+          `;
+        } else {
+          body.innerHTML += `
+            <tr>
+              <td>${dateStr}</td>
+              <td><strong>Total Study</strong></td>
+              <td><strong>${total} hr</strong></td>
+              <td>${growthBadge}</td>
+            </tr>
+          `;
+        }
+      });
+    }
+  }
+
+  function renderStudyManager() {
+    const list = document.getElementById('manageList');
+    list.innerHTML = '';
+    if (studyData.length === 0) {
+      list.innerHTML = `<span style="color:#94a3b8; font-size:12px;">No study entries.</span>`;
+      return;
+    }
+    studyData.forEach((item, index) => {
+      list.innerHTML += `
+        <div class="manage-item">
+          <span><strong>${item.date}</strong> | ${item.subject} (${item.hours} hr)</span>
+          <div class="item-actions">
+            <button class="btn-action-edit" onclick="startEditStudy(${index})">Edit</button>
+            <button class="btn-action-del" onclick="deleteStudy(${index})">Delete</button>
+          </div>
+        </div>
+      `;
+    });
+  }
+
+  // --- TEST TAB LOGIC ---
+  function renderTestTable() {
+    const head = document.getElementById('tableHead');
+    const body = document.getElementById('tableBody');
+    const selectedDate = document.getElementById('filterDate').value;
+
+    head.innerHTML = `
+      <tr>
+        <th style="width: 25%;">Date</th>
+        <th style="width: 30%;">Test</th>
+        <th style="width: 25%;">Status / Marks</th>
+        <th style="width: 20%;">Growth</th>
+      </tr>
+    `;
+    body.innerHTML = '';
+
+    if (selectedDate) {
+      const dayTests = testData.filter(d => d.date === selectedDate);
+      if (dayTests.length === 0) {
+        body.innerHTML = `
+          <tr class="skipped-row">
+            <td>${selectedDate}</td>
+            <td><strong>Skipped (No Test)</strong></td>
+            <td><span class="status-fail">&#10008; Skipped</span></td>
+            <td><span class="growth-down">&#8595; Skipped</span></td>
+          </tr>
+        `;
+        return;
+      }
+
+      dayTests.forEach(item => {
+        let isAttended = item.status === 'Attended';
+        let statusIcon = isAttended ? '<span class="status-pass">&#10004;</span>' : '<span class="status-fail">&#10008;</span>';
+        let marksDisplay = isAttended ? `${statusIcon} ${item.marks} M` : `${statusIcon} Absent`;
+
+        let prevTest = testData
+          .filter(d => d.date < item.date && d.subject.toLowerCase() === item.subject.toLowerCase() && d.status === 'Attended')
+          .sort((a, b) => a.date.localeCompare(b.date))
+          .pop();
+
+        let growthBadge = '<span class="growth-same">-</span>';
+        if (isAttended && prevTest) {
+          const diff = (item.marks - prevTest.marks).toFixed(1);
+          if (diff > 0) growthBadge = `<span class="growth-up">&#8593; +${diff}</span>`;
+          else if (diff < 0) growthBadge = `<span class="growth-down">&#8595; ${diff}</span>`;
+          else growthBadge = `<span class="growth-same">= 0</span>`;
+        }
+
+        body.innerHTML += `
+          <tr>
+            <td>${item.date}</td>
+            <td>${item.subject}</td>
+            <td>${marksDisplay}</td>
+            <td>${growthBadge}</td>
+          </tr>
+        `;
+      });
+
+    } else {
+      if (testData.length === 0) {
+        body.innerHTML = `<tr><td colspan="4" class="empty-msg">No test entries added yet.</td></tr>`;
+        return;
+      }
+
+      const continuousDates = getContinuousDates(testData);
+      let prevTotalScore = null;
+
+      continuousDates.forEach(dateStr => {
+        const items = testData.filter(d => d.date === dateStr);
+
+        if (items.length === 0) {
+          let growthBadge = '<span class="growth-same">-</span>';
+          if (prevTotalScore !== null) {
+            const diff = (0 - prevTotalScore).toFixed(1);
+            growthBadge = `<span class="growth-down">&#8595; ${diff}</span>`;
+          }
+          prevTotalScore = 0;
+
+          body.innerHTML += `
+            <tr class="skipped-row">
+              <td>${dateStr}</td>
+              <td><strong>Skipped (No Test)</strong></td>
+              <td><span class="status-fail">&#10008; 0 M</span></td>
+              <td>${growthBadge}</td>
+            </tr>
+          `;
+        } else {
+          items.forEach((item) => {
+            let isAttended = item.status === 'Attended';
+            let statusIcon = isAttended ? '<span class="status-pass">&#10004;</span>' : '<span class="status-fail">&#10008;</span>';
+            let marksDisplay = isAttended ? `${statusIcon} ${item.marks} M` : `${statusIcon} Absent`;
+
+            let prevTest = testData
+              .filter(d => d.date < item.date && d.subject.toLowerCase() === item.subject.toLowerCase() && d.status === 'Attended')
+              .sort((a, b) => a.date.localeCompare(b.date))
+              .pop();
+
+            let growthBadge = '<span class="growth-same">-</span>';
+            if (isAttended && prevTest) {
+              const diff = (item.marks - prevTest.marks).toFixed(1);
+              if (diff > 0) growthBadge = `<span class="growth-up">&#8593; +${diff}</span>`;
+              else if (diff < 0) growthBadge = `<span class="growth-down">&#8595; ${diff}</span>`;
+              else growthBadge = `<span class="growth-same">= 0</span>`;
+            } else if (!isAttended && prevTest) {
+              growthBadge = `<span class="growth-down">&#8595; -${prevTest.marks}</span>`;
+            }
+
+            if (isAttended) prevTotalScore = item.marks;
+
+            body.innerHTML += `
+              <tr>
+                <td>${item.date}</td>
+                <td>${item.subject}</td>
+                <td>${marksDisplay}</td>
+                <td>${growthBadge}</td>
+              </tr>
+            `;
+          });
+        }
+      });
+    }
+  }
+
+  function renderTestManager() {
+    const list = document.getElementById('manageList');
+    list.innerHTML = '';
+    if (testData.length === 0) {
+      list.innerHTML = `<span style="color:#94a3b8; font-size:12px;">No test entries.</span>`;
+      return;
+    }
+    testData.forEach((item, index) => {
+      let markText = item.status === 'Attended' ? `${item.marks} Marks` : 'Absent';
+    
